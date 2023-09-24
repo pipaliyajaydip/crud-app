@@ -21,3 +21,32 @@ export const addUser = async (request, response) => {
         console.log("error while adding user data", error);
     }
 }
+
+export const getUser = async (request, response) => {
+    try {
+        const query = modelUser.where({username: request.params.user})
+        const user = await query.findOne()
+        user===null ? response.status(404).json({message: `NOT FOUND :( ${request.params.user}`}) : response.status(200).json(user) 
+    } catch (error) {
+        response.status(404).json({message: error.message})
+    }
+}
+
+export const getUsers = async (request, response) => {
+    try{
+        const users = await modelUser.find();
+        response.status(200).json(users)
+    } catch (error) {
+        response.status(404).json({message: error.message})
+    }
+}
+
+export const deleteUserAc = async (request, response) => {
+    try {
+        const query = modelUser.where({username : request.params.user})
+        const user = await query.deleteOne();
+        response.status(201).json({message: `user a/c deleted ${request.params.user}`})
+    } catch (error) {
+        response.status(404).json({message: error.message})
+    }
+}
